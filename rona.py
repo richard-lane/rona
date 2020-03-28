@@ -30,8 +30,7 @@ def run_animation(particle, dt, markersize):
     ax.add_patch(rect)
 
     def init():
-        """initializparticles, = ax.plot([], [], 'bo', ms=6)e animation"""
-        particles, = ax.plot([], [], "bo", ms=6)
+        """ Initialise animation """
         particles.set_data([], [])
         rect.set_edgecolor("none")
         return particles, rect
