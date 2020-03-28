@@ -57,16 +57,15 @@ def run_animation(particle_box, dt, markersize):
         recovered_x = []
         recovered_y = []
         # This could be optimised, i cba
-        for particle in particle_box.particles:
-            if particle.state == Particle.State.UNINFECTED:
-                uninfected_x.append(particle.x)
-                uninfected_y.append(particle.y)
-            elif particle.state == Particle.State.SICK:
-                infected_x.append(particle.x)
-                infected_y.append(particle.y)
-            elif particle.state == Particle.State.RECOVERED:
-                recovered_x.append(particle.x)
-                recovered_y.append(particle.y)
+        for particle in particle_box.uninfected_particles:
+            uninfected_x.append(particle.x)
+            uninfected_y.append(particle.y)
+        for particle in particle_box.infected_particles:
+            infected_x.append(particle.x)
+            infected_y.append(particle.y)
+        for particle in particle_box.recovered_particles:
+            recovered_x.append(particle.x)
+            recovered_y.append(particle.y)
 
         # update pieces of the animation
         rect.set_edgecolor("k")

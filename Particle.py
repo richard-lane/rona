@@ -44,23 +44,32 @@ class Box:
         self.position = position
         self.width = width
         self.height = height
-        self.particles = particles
+        self.uninfected_particles = particles
+        self.infected_particles = []
+        self.recovered_particles = []
+        self.dead_particles = []
+
+        self.particle_lists = [
+            self.uninfected_particles,
+            self.infected_particles,
+            self.recovered_particles,
+            self.dead_particles,
+        ]
 
     def step(self, dt):
         """
         Move all particles in the box and process collisions
 
         """
-        for particle in self.particles:
-            particle.step(
-                dt,
-                self.position[0],
-                self.position[0] + self.width,
-                self.position[1],
-                self.position[1] + self.height,
-            )
-            if particle.state == State.DEAD:
-                self.particles.remove(particle)
+        for particle_list in self.particle_lists:
+            for particle in particle_list:
+                particle.step(
+                    dt,
+                    self.position[0],
+                    self.position[0] + self.width,
+                    self.position[1],
+                    self.position[1] + self.height,
+                )
 
 
 class Particle:
