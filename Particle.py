@@ -60,8 +60,7 @@ class Box:
                 self.position[1] + self.height,
             )
             if particle.state == State.DEAD:
-                pass
-                #self.particles.remove(particle)
+                self.particles.remove(particle)
 
 
 class Particle:
@@ -94,7 +93,6 @@ class Particle:
             self.x = 2 * left - self.x
             self.vx *= -1
         if self.y > top:
-            self.state = State.DEAD
             self.y = 2 * top - self.y
             self.vy *= -1
         elif self.y < bottom:
