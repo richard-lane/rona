@@ -3,6 +3,14 @@ Class for a particle, representing a person or something
 
 """
 import collections
+import enum
+
+
+class State(enum.Enum):
+    UNINFECTED = 0
+    SICK = 1
+    RECOVERED = 2
+    DEAD = 3
 
 
 """
@@ -51,7 +59,7 @@ class Box:
                 self.position[1],
                 self.position[1] + self.height,
             )
-            if not particle.alive:
+            if particle.state == State.DEAD:
                 self.particles.remove(particle)
 
 
@@ -67,7 +75,7 @@ class Particle:
         self.y = particlestate.y
         self.vx = particlestate.vx
         self.vy = particlestate.vy
-        self.alive = True
+        self.state = State.UNINFECTED
 
     def step(self, dt, left, right, bottom, top):
         """
@@ -85,7 +93,7 @@ class Particle:
             self.x = 2 * left - self.x
             self.vx *= -1
         if self.y > top:
-            self.y = 2*top - self.y
+            self.y = 2 * top - self.y
             self.vy *= -1
         elif self.y < bottom:
             self.y = 2 * bottom - self.y
