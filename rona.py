@@ -45,10 +45,10 @@ def run_animation(particle_box, dt, markersize):
 
     def animate(i):
         """perform animation step"""
+        particle_box.step(dt)
         x = []
         y = []
         for particle in particle_box.particles:
-            particle.step(dt)
             x.append(particle.x)
             y.append(particle.y)
 
@@ -87,9 +87,9 @@ def main():
         my_particle_state = Particle.particle_state(*random_state())
         my_particles.append(Particle.Particle(my_particle_state))
 
-    Particle_Box = Particle.Box(my_particles, (-1, -1), 2, 2)
+    particle_box = Particle.Box(my_particles, (-1, -1), 2, 2)
 
-    run_animation(Particle_Box, 0.1, 2)
+    run_animation(particle_box, 0.1, 2)
     plt.show()
 
 

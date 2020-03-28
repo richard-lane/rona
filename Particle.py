@@ -28,15 +28,34 @@ class Box:
         """
         assert len(position) == 2
 
+        # Check our particles all start inside the box
+        for particle in particles:
+            assert position[0] < particle.x < position[0] + width
+            assert position[1] < particle.y < position[1] + height
+
         self.position = position
         self.width = width
         self.height = height
         self.particles = particles
 
+    def step(self, dt):
+        """
+        Move all particles in the box and process collisions
+
+        """
+        for particle in self.particles:
+            particle.step(
+                dt,
+                self.position[0],
+                self.position[0] + self.width,
+                self.position[1],
+                self.position[1] + self.height,
+            )
+
 
 class Particle:
     """
-    A particle that will move around inside a box and not collide with anything
+    A particle that will move around inside a box
 
     """
 
@@ -47,10 +66,20 @@ class Particle:
         self.vx = particlestate.vx
         self.vy = particlestate.vy
 
-    def step(self, dt):
+    def step(self, dt, left, right, bottom, top):
         """
-        Move this particle
+        Move this particle, colliding from walls on the L/R/T/B
 
         """
         self.x += self.vx * dt
         self.y += self.vy * dt
+
+        # If we have gone past a barrier, reflect the particle in the barrier
+        if self.x > right:
+            self.x = 2 * right - self.x
+        elif self.x < left:
+            self.x = 2 * left - self.x
+        if self.y > top:
+            self.y = 2 * top - self.y
+        elif self.y < bottom:
+            self.y = 2 * bottom - self.y
