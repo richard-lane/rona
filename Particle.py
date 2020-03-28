@@ -63,6 +63,11 @@ class Box:
             State.DEAD: self.dead_particles,
         }
 
+        # Infect the first particle
+        self.infected_particles.append(self.uninfected_particles[0])
+        del self.uninfected_particles[0]
+        self.infected_particles[0].infect(0.99)
+
     def spread(self):
         """
         Spread infection from infected particles to nearby uninfected ones
