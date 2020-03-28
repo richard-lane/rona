@@ -26,12 +26,16 @@ class Box:
 
     """
 
-    def __init__(self, particles, position, width, height):
+    def __init__(
+        self, particles, position, width, height, infection_chance, infection_radius
+    ):
         """
         :param particles: iterable of particles in the box
         :param position:  low left edge of box; (x, y)
         :param width:     width of box
         :param height:    height of box
+        :param infection_chance: chance of a sick particle passing the disease on to a nearby healthy one, per timestep
+        :param infection_radius: radius below which the disease may be passed on
 
         """
         assert len(position) == 2
@@ -45,6 +49,9 @@ class Box:
         self.width = width
         self.height = height
         self.uninfected_particles = particles
+        self.infection_chance = infection_chance
+        self.infection_radius = infection_radius
+
         self.infected_particles = []
         self.recovered_particles = []
         self.dead_particles = []
@@ -55,6 +62,19 @@ class Box:
             State.RECOVERED: self.recovered_particles,
             State.DEAD: self.dead_particles,
         }
+
+    def spread(self):
+        """
+        Spread infection from infected particles to nearby uninfected ones
+
+        """
+        for infected_particle in self.infected_particles:
+            for uninfected_particle in self.uninfected_particles:
+                distance2 = (infected_particle.x - uninfected_particle.x) ** 2 + (
+                    infected_particle.y - uninfected_particle.y
+                ) ** 2
+                if distance2 < self.infection_radius ** 2:
+                    uninfected_particle.infect(self.infection_chance)
 
     def step(self, dt):
         """
