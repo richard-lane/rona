@@ -4,6 +4,7 @@ Main file for virus simulation thing
 """
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import numpy as np
 
 import Particle
 
@@ -50,12 +51,26 @@ def run_animation(particle, dt, markersize):
     )
 
 
+def random_state():
+    """
+    return a list of (x, y, vx, vy)
+    positions are between 0 and 1; velocities are between 0 and 0.2
+
+    """
+    state = np.random.rand(4)
+    # Make velocities smaller so its easier to see the animation
+    state[2] *= 0.2
+    state[3] *= 0.2
+
+    return state
+
+
 def main():
     """
     Do some cool stuff
 
     """
-    my_particle_state = Particle.particle_state(0, 0, 0.1, 0.1)
+    my_particle_state = Particle.particle_state(*random_state())
     my_particle = Particle.Particle(my_particle_state)
 
     run_animation(my_particle, 0.1, 2)
