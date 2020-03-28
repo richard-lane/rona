@@ -3,6 +3,7 @@ Class for a particle, representing a person or something
 
 """
 import collections
+import random
 import enum
 
 
@@ -92,6 +93,17 @@ class Particle:
         self.vx = particlestate.vx
         self.vy = particlestate.vy
         self.state = State.UNINFECTED
+
+    def infect(self, infection_chance):
+        """
+        This particle has gone near a sick one and may now get infected
+
+        Infection chance is the change of being infected per tick
+
+        """
+        assert 0 < infection_chance < 1
+        if random.random() < infection_chance:
+            self.state = State.SICK
 
     def step(self, dt, left, right, bottom, top):
         """
