@@ -45,14 +45,18 @@ class Box:
             assert position[0] < particle.x < position[0] + width
             assert position[1] < particle.y < position[1] + height
 
+        # Set one of our particles to be sick
+
         self.position = position
         self.width = width
         self.height = height
-        self.uninfected_particles = particles
         self.infection_chance = infection_chance
         self.infection_radius = infection_radius
 
-        self.infected_particles = []
+        self.uninfected_particles = particles
+        self.infected_particles = [particles[0]]
+        del self.uninfected_particles[0]
+        self.infected_particles[0].state = State.SICK
         self.recovered_particles = []
         self.dead_particles = []
 
@@ -62,19 +66,6 @@ class Box:
             State.RECOVERED: self.recovered_particles,
             State.DEAD: self.dead_particles,
         }
-
-    def spread(self):
-        """
-        Spread infection from infected particles to nearby uninfected ones
-
-        """
-        for infected_particle in self.infected_particles:
-            for uninfected_particle in self.uninfected_particles:
-                distance2 = (infected_particle.x - uninfected_particle.x) ** 2 + (
-                    infected_particle.y - uninfected_particle.y
-                ) ** 2
-                if distance2 < self.infection_radius ** 2:
-                    uninfected_particle.infect(self.infection_chance)
 
     def step(self, dt):
         """
@@ -96,12 +87,14 @@ class Box:
                     self.position[0] + self.width,
                     self.position[1],
                     self.position[1] + self.height,
+                    self.infected_particles,
+                    self.infection_radius,
+                    self.infection_chance,
                 )
                 # If the state has changed, remove it from its original list and add it to the new one
                 if particle.state != initial_state:
                     self.particle_lists[particle.state].append(particle)
                     self.particle_lists[initial_state].remove(particle)
-        self.spread()
 
 
 class Particle:
@@ -129,7 +122,17 @@ class Particle:
         if random.random() < infection_chance:
             self.state = State.SICK
 
-    def step(self, dt, left, right, bottom, top):
+    def step(
+        self,
+        dt,
+        left,
+        right,
+        bottom,
+        top,
+        infected_particles,
+        infection_radius,
+        infection_chance,
+    ):
         """
         Move this particle, colliding from walls on the L/R/T/B
 
@@ -141,7 +144,6 @@ class Particle:
         if self.x > right:
             self.x = 2 * right - self.x
             self.vx *= -1
-            self.state = State.SICK
         elif self.x < left:
             self.x = 2 * left - self.x
             self.vx *= -1
@@ -151,3 +153,10 @@ class Particle:
         elif self.y < bottom:
             self.y = 2 * bottom - self.y
             self.vy *= -1
+
+        # If there is an infected_particle nearby, we may get infected
+        for infected_particle in infected_particles:
+            if (infected_particle.x - self.x) ** 2 + (
+                infected_particle.y - self.y
+            ) ** 2 > infection_radius ** 2:
+                self.infect(infection_chance)

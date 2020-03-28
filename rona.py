@@ -104,11 +104,11 @@ def main():
 
     """
     my_particles = []
-    for i in range(5):
+    for i in range(100):
         my_particle_state = Particle.particle_state(*random_state())
         my_particles.append(Particle.Particle(my_particle_state))
 
-    particle_box = Particle.Box(my_particles, (-1, -1), 2, 2, 0.9, 1)
+    particle_box = Particle.Box(my_particles, (-2, -2), 4, 4, 0.0001, 0.0001)
 
     run_animation(particle_box, 0.1, 2)
     plt.show()
