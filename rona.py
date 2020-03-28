@@ -24,8 +24,9 @@ def run_animation(particle_box, dt, markersize):
     )
 
     # particles holds the locations of the particles
-    alive_particles, = ax.plot([], [], "bo", ms=6)
-    dead_particles, = ax.plot([], [], "rx", ms=6)
+    uninfected_particles, = ax.plot([], [], "bo", ms=6)
+    infected_particles, = ax.plot([], [], "rx", ms=6)
+    recovered_particles, = ax.plot([], [], "mo", ms=6)
 
     # rect is the box edge
     rect = plt.Rectangle(
@@ -40,35 +41,44 @@ def run_animation(particle_box, dt, markersize):
 
     def init():
         """ Initialise animation """
-        alive_particles.set_data([], [])
-        dead_particles.set_data([], [])
+        uninfected_particles.set_data([], [])
+        infected_particles.set_data([], [])
+        recovered_particles.set_data([], [])
         rect.set_edgecolor("none")
-        return alive_particles, dead_particles, rect
+        return uninfected_particles, infected_particles, recovered_particles, rect
 
     def animate(i):
         """perform animation step"""
         particle_box.step(dt)
-        x = []
-        y = []
-        dead_x = []
-        dead_y = []
+        uninfected_x = []
+        uninfected_y = []
+        infected_x = []
+        infected_y = []
+        recovered_x = []
+        recovered_y = []
+        # This could be optimised, i cba
         for particle in particle_box.particles:
             if particle.state == Particle.State.UNINFECTED:
-                x.append(particle.x)
-                y.append(particle.y)
-            elif particle.state == Particle.State.DEAD:
-                dead_x.append(particle.x)
-                dead_y.append(particle.y)
+                uninfected_x.append(particle.x)
+                uninfected_y.append(particle.y)
+            elif particle.state == Particle.State.SICK:
+                infected_x.append(particle.x)
+                infected_y.append(particle.y)
+            elif particle.state == Particle.State.RECOVERED:
+                recovered_x.append(particle.x)
+                recovered_y.append(particle.y)
 
         # update pieces of the animation
         rect.set_edgecolor("k")
-        alive_particles.set_data(x, y)
-        dead_particles.set_data(dead_x, dead_y)
+        uninfected_particles.set_data(uninfected_x, uninfected_y)
+        infected_particles.set_data(infected_x, infected_y)
+        recovered_particles.set_data(recovered_x, recovered_y)
 
-        alive_particles.set_markersize(markersize)
-        dead_particles.set_markersize(markersize)
+        uninfected_particles.set_markersize(markersize)
+        infected_particles.set_markersize(markersize)
+        recovered_particles.set_markersize(markersize)
 
-        return alive_particles, dead_particles, rect
+        return uninfected_particles, infected_particles, recovered_particles, rect
 
     return animation.FuncAnimation(
         fig, animate, frames=600, interval=10, blit=True, init_func=init
