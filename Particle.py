@@ -66,7 +66,7 @@ class Box:
         # Infect the first particle
         self.infected_particles.append(self.uninfected_particles[0])
         del self.uninfected_particles[0]
-        self.infected_particles[0].infect(0.99)
+        self.infected_particles[0].state = State.SICK
 
     def spread(self):
         """
@@ -103,6 +103,7 @@ class Box:
                 if particle.state != initial_state:
                     self.particle_lists[initial_state].remove(particle)
                     self.particle_lists[particle.state].append(particle)
+        self.spread()
 
 
 class Particle:

@@ -108,7 +108,7 @@ def main():
         my_particle_state = Particle.particle_state(*random_state())
         my_particles.append(Particle.Particle(my_particle_state))
 
-    particle_box = Particle.Box(my_particles, (-1, -1), 2, 2, 1, 0.01)
+    particle_box = Particle.Box(my_particles, (-1, -1), 2, 2, 0.9, 1)
 
     run_animation(particle_box, 0.1, 2)
     plt.show()
