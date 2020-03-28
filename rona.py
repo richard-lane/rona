@@ -24,7 +24,8 @@ def run_animation(particle_box, dt, markersize):
     )
 
     # particles holds the locations of the particles
-    particles, = ax.plot([], [], "bo", ms=6)
+    alive_particles, = ax.plot([], [], "bo", ms=6)
+    dead_particles, = ax.plot([], [], "rx", ms=6)
 
     # rect is the box edge
     rect = plt.Rectangle(
@@ -39,24 +40,35 @@ def run_animation(particle_box, dt, markersize):
 
     def init():
         """ Initialise animation """
-        particles.set_data([], [])
+        alive_particles.set_data([], [])
+        dead_particles.set_data([], [])
         rect.set_edgecolor("none")
-        return particles, rect
+        return alive_particles, dead_particles, rect
 
     def animate(i):
         """perform animation step"""
         particle_box.step(dt)
         x = []
         y = []
+        dead_x = []
+        dead_y = []
         for particle in particle_box.particles:
-            x.append(particle.x)
-            y.append(particle.y)
+            if particle.state == Particle.State.UNINFECTED:
+                x.append(particle.x)
+                y.append(particle.y)
+            elif particle.state == Particle.State.DEAD:
+                dead_x.append(particle.x)
+                dead_y.append(particle.y)
 
         # update pieces of the animation
         rect.set_edgecolor("k")
-        particles.set_data(x, y)
-        particles.set_markersize(markersize)
-        return particles, rect
+        alive_particles.set_data(x, y)
+        dead_particles.set_data(dead_x, dead_y)
+
+        alive_particles.set_markersize(markersize)
+        dead_particles.set_markersize(markersize)
+
+        return alive_particles, dead_particles, rect
 
     return animation.FuncAnimation(
         fig, animate, frames=600, interval=10, blit=True, init_func=init
