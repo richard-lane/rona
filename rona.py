@@ -83,7 +83,7 @@ def main():
 
     """
     my_particles = []
-    for i in range(50):
+    for i in range(500):
         my_particle_state = Particle.particle_state(*random_state())
         my_particles.append(Particle.Particle(my_particle_state))
 
