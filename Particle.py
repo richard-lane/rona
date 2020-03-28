@@ -63,11 +63,6 @@ class Box:
             State.DEAD: self.dead_particles,
         }
 
-        # Infect the first particle
-        self.infected_particles.append(self.uninfected_particles[0])
-        del self.uninfected_particles[0]
-        self.infected_particles[0].state = State.SICK
-
     def spread(self):
         """
         Spread infection from infected particles to nearby uninfected ones
@@ -85,6 +80,9 @@ class Box:
         """
         Move all particles in the box and process collisions
 
+        There is a bug here as we're iterating over some lists and modifiying them at the same time
+        Fix it
+
         """
         # Iterate over all of our particle types
         for particle_list in self.particle_lists.items():
@@ -101,8 +99,8 @@ class Box:
                 )
                 # If the state has changed, remove it from its original list and add it to the new one
                 if particle.state != initial_state:
-                    self.particle_lists[initial_state].remove(particle)
                     self.particle_lists[particle.state].append(particle)
+                    self.particle_lists[initial_state].remove(particle)
         self.spread()
 
 
@@ -143,6 +141,7 @@ class Particle:
         if self.x > right:
             self.x = 2 * right - self.x
             self.vx *= -1
+            self.state = State.SICK
         elif self.x < left:
             self.x = 2 * left - self.x
             self.vx *= -1
