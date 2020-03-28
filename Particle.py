@@ -15,7 +15,6 @@ class State(enum.Enum):
 
 """
 Encapsulate particle state
-
 """
 particle_state = collections.namedtuple("particle_state", ["x", "y", "vx", "vy"])
 
@@ -49,20 +48,24 @@ class Box:
         self.recovered_particles = []
         self.dead_particles = []
 
-        self.particle_lists = [
-            self.uninfected_particles,
-            self.infected_particles,
-            self.recovered_particles,
-            self.dead_particles,
-        ]
+        self.particle_lists = {
+            State.UNINFECTED: self.uninfected_particles,
+            State.SICK: self.infected_particles,
+            State.RECOVERED: self.recovered_particles,
+            State.DEAD: self.dead_particles,
+        }
 
     def step(self, dt):
         """
         Move all particles in the box and process collisions
 
         """
-        for particle_list in self.particle_lists:
-            for particle in particle_list:
+        # Iterate over all of our particle types
+        for particle_list in self.particle_lists.items():
+            # For each particle in this type...
+            for particle in particle_list[1]:
+                # Record its initial state so we can track if it changes after a timestep
+                initial_state = particle.state
                 particle.step(
                     dt,
                     self.position[0],
@@ -70,6 +73,10 @@ class Box:
                     self.position[1],
                     self.position[1] + self.height,
                 )
+                # If the state has changed, remove it from its original list and add it to the new one
+                if particle.state != initial_state:
+                    self.particle_lists[initial_state].remove(particle)
+                    self.particle_lists[particle.state].append(particle)
 
 
 class Particle:
