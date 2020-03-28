@@ -78,7 +78,6 @@ class Particle:
         self.y += self.vy * dt
 
         # If we have gone past a barrier, reflect the particle in the barrier
-        # If a particle crosses the top barrier, it dies
         if self.x > right:
             self.x = 2 * right - self.x
             self.vx *= -1
@@ -86,7 +85,8 @@ class Particle:
             self.x = 2 * left - self.x
             self.vx *= -1
         if self.y > top:
-            self.alive = False
+            self.y = 2*top - self.y
+            self.vy *= -1
         elif self.y < bottom:
             self.y = 2 * bottom - self.y
             self.vy *= -1
