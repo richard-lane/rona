@@ -9,9 +9,9 @@ import numpy as np
 import Particle
 
 
-def run_animation(particle, dt, markersize):
+def run_animation(particle_list, dt, markersize):
     """
-    Animate a single particle
+    Animate an iterable of particles
     Does a bunch of stuff then returns a matplotlib animation object . i think
 
     """
@@ -38,11 +38,16 @@ def run_animation(particle, dt, markersize):
 
     def animate(i):
         """perform animation step"""
-        particle.step(dt)
+        x = []
+        y = []
+        for particle in particle_list:
+            particle.step(dt)
+            x.append(particle.x)
+            y.append(particle.y)
 
         # update pieces of the animation
         rect.set_edgecolor("k")
-        particles.set_data(particle.x, particle.y)
+        particles.set_data(x, y)
         particles.set_markersize(markersize)
         return particles, rect
 
@@ -57,7 +62,7 @@ def random_state():
     positions are between 0 and 1; velocities are between 0 and 0.2
 
     """
-    state = np.random.rand(4)
+    state = 2*np.random.rand(4) - 1
     # Make velocities smaller so its easier to see the animation
     state[2] *= 0.2
     state[3] *= 0.2
@@ -67,13 +72,15 @@ def random_state():
 
 def main():
     """
-    Do some cool stuff
+    Animate a few particles moving
 
     """
-    my_particle_state = Particle.particle_state(*random_state())
-    my_particle = Particle.Particle(my_particle_state)
+    my_particles = []
+    for i in range(50):
+        my_particle_state = Particle.particle_state(*random_state())
+        my_particles.append(Particle.Particle(my_particle_state))
 
-    run_animation(my_particle, 0.1, 2)
+    run_animation(my_particles, 0.1, 2)
     plt.show()
 
 
