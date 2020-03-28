@@ -122,6 +122,17 @@ class Particle:
         if random.random() < infection_chance:
             self.state = State.SICK
 
+    def infection_progresses(self):
+        """
+        The infection progresses and we may either die or get better
+
+        """
+        rand_num = random.random()
+        if rand_num < 0.001:
+            self.state = State.RECOVERED
+        if rand_num > 0.99:
+            self.state = State.DEAD
+
     def step(
         self,
         dt,
@@ -154,9 +165,12 @@ class Particle:
             self.y = 2 * bottom - self.y
             self.vy *= -1
 
-        # If there is an infected_particle nearby, we may get infected
-        for infected_particle in infected_particles:
-            if (infected_particle.x - self.x) ** 2 + (
-                infected_particle.y - self.y
-            ) ** 2 > infection_radius ** 2:
-                self.infect(infection_chance)
+        if self.state == State.UNINFECTED:
+            # If there is an infected_particle nearby, we may get infected
+            for infected_particle in infected_particles:
+                if (infected_particle.x - self.x) ** 2 + (
+                    infected_particle.y - self.y
+                ) ** 2 > infection_radius ** 2:
+                    self.infect(infection_chance)
+        elif self.state == State.SICK:
+            self.infection_progresses()
