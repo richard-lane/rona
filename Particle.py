@@ -77,9 +77,13 @@ class Particle:
         # If we have gone past a barrier, reflect the particle in the barrier
         if self.x > right:
             self.x = 2 * right - self.x
+            self.vx *= -1
         elif self.x < left:
             self.x = 2 * left - self.x
+            self.vx *= -1
         if self.y > top:
             self.y = 2 * top - self.y
+            self.vy *= -1
         elif self.y < bottom:
             self.y = 2 * bottom - self.y
+            self.vy *= -1
