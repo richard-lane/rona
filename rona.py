@@ -9,9 +9,9 @@ import numpy as np
 import Particle
 
 
-def run_animation(particle_list, dt, markersize):
+def run_animation(particle_box, dt, markersize):
     """
-    Animate an iterable of particles
+    Animate a box of particles
     Does a bunch of stuff then returns a matplotlib animation object . i think
 
     """
@@ -27,7 +27,14 @@ def run_animation(particle_list, dt, markersize):
     particles, = ax.plot([], [], "bo", ms=6)
 
     # rect is the box edge
-    rect = plt.Rectangle((-1, -1), 2, 2, ec="none", lw=2, fc="none")
+    rect = plt.Rectangle(
+        particle_box.position,
+        particle_box.width,
+        particle_box.height,
+        ec="none",
+        lw=2,
+        fc="none",
+    )
     ax.add_patch(rect)
 
     def init():
@@ -40,7 +47,7 @@ def run_animation(particle_list, dt, markersize):
         """perform animation step"""
         x = []
         y = []
-        for particle in particle_list:
+        for particle in particle_box.particles:
             particle.step(dt)
             x.append(particle.x)
             y.append(particle.y)
@@ -62,7 +69,7 @@ def random_state():
     positions are between 0 and 1; velocities are between 0 and 0.2
 
     """
-    state = 2*np.random.rand(4) - 1
+    state = 2 * np.random.rand(4) - 1
     # Make velocities smaller so its easier to see the animation
     state[2] *= 0.2
     state[3] *= 0.2
@@ -80,7 +87,9 @@ def main():
         my_particle_state = Particle.particle_state(*random_state())
         my_particles.append(Particle.Particle(my_particle_state))
 
-    run_animation(my_particles, 0.1, 2)
+    Particle_Box = Particle.Box(my_particles, (-1, -1), 2, 2)
+
+    run_animation(Particle_Box, 0.1, 2)
     plt.show()
 
 
