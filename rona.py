@@ -108,9 +108,11 @@ def main():
     """
     box_width = 4
     box_height = 4
-    particle_speed = (
+    particle_speed = (  # Not actually the speed of the particles; max vx, vy of the particles
         0.1
-    )  # Not actually the speed of the particles; max vx, vy of the particles
+    )
+    infection_chance = 0.0001
+    infection_radius = 0.0001
     my_particles = []
     for i in range(500):
         my_particle_state = Particle.particle_state(
@@ -127,8 +129,8 @@ def main():
         (-box_width / 2, -box_height / 2),
         box_width,
         box_height,
-        0.0001,
-        0.0001,
+        infection_chance,
+        infection_radius,
     )
 
     run_animation(particle_box, 0.1, 2)

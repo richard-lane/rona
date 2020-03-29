@@ -13,7 +13,7 @@ Particles bounce around collisionlessly + elastically in the box
 
 Particles can be:
  * UNINFECTED - bounce around as normal
- * INFECTED - same as above for now
- * RECOVERED - same as above
+ * INFECTED - bounce around; if an uninfected particle passes nearby it may catch the infection.
+ * RECOVERED - same as uninfected but cannot catch the disease. Immunity does not wear off
  * DEAD - do not get drawn
 
