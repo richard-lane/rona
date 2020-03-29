@@ -79,7 +79,7 @@ class Box:
             for particle in particle_list[1]:
                 # Record its initial state so we can track if it changes after a timestep
                 initial_state = particle.state
-                particle.step(
+                particle.move(
                     dt,
                     self.position[0],
                     self.position[0] + self.width,
@@ -141,7 +141,7 @@ class Particle:
         if rand_num > 0.995:
             self.state = State.DEAD
 
-    def step(self, dt, left, right, bottom, top):
+    def move(self, dt, left, right, bottom, top):
         """
         Move this particle, colliding from walls on the L/R/T/B
 
