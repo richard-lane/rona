@@ -125,7 +125,9 @@ def cli():
         type=float,
         help="Chance to catch the infection per timestep",
     )
-    parser.add_argument("--num", default=100, type=int, help="Number of particles to simulate")
+    parser.add_argument(
+        "--num", default=100, type=int, help="Number of particles to simulate"
+    )
 
     return parser.parse_args()
 
