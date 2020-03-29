@@ -1,7 +1,19 @@
 rona.py - a simple disease simulator
 ======
 
-Run with python rona.py
+usage: rona.py [-h] [--width WIDTH] [--height HEIGHT] [--speed SPEED]
+               [--radius RADIUS] [--chance CHANCE]
+
+Run particle infection simulator
+
+optional arguments:
+  * -h, --help       show this help message and exit
+  * --width WIDTH    Box width
+  * --height HEIGHT  Box height
+  * --speed SPEED    Max particle speed
+  * --radius RADIUS  Radius below which particles may catch the infection
+  * --chance CHANCE  Chance to catch the infection per timestep
+
 
 I think this might need python 3.8 but idk
 

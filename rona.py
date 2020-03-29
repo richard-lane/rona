@@ -5,6 +5,8 @@ Main file for virus simulation thing
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import random
+import argparse
+from math import sqrt
 
 import Particle
 
@@ -101,18 +103,45 @@ def random_state(x_range, y_range, v):
     return x, y, vx, vy
 
 
-def main():
+def cli():
+    """
+    CLI parsing
+
+    Returns an argparse object containing the arguments passed in from the command line
+    """
+    parser = argparse.ArgumentParser(description="Run particle infection simulator")
+    parser.add_argument("--width", default=4, type=float, help="Box width")
+    parser.add_argument("--height", default=4, type=float, help="Box height")
+    parser.add_argument("--speed", default=0.2, type=float, help="Max particle speed")
+    parser.add_argument(
+        "--radius",
+        default=0.0001,
+        type=float,
+        help="Radius below which particles may catch the infection",
+    )
+    parser.add_argument(
+        "--chance",
+        default=0.0001,
+        type=float,
+        help="Chance to catch the infection per timestep",
+    )
+
+    return parser.parse_args()
+
+
+def main(args):
     """
     Animate a few particles moving
 
     """
-    box_width = 4
-    box_height = 4
+    box_width = args.width
+    box_height = args.height
     particle_speed = (  # Not actually the speed of the particles; max vx, vy of the particles
-        0.1
+        args.speed / sqrt(2)
     )
-    infection_chance = 0.0001
-    infection_radius = 0.0001
+    infection_chance = args.chance
+    infection_radius = args.radius
+
     my_particles = []
     for i in range(500):
         my_particle_state = Particle.particle_state(
@@ -138,4 +167,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(cli())
