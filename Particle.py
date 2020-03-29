@@ -27,7 +27,15 @@ class Box:
     """
 
     def __init__(
-        self, particles, position, width, height, infection_chance, infection_radius
+        self,
+        particles,
+        position,
+        width,
+        height,
+        infection_chance,
+        infection_radius,
+        death_chance,
+        recovery_chance,
     ):
         """
         :param particles: iterable of particles in the box
@@ -48,8 +56,11 @@ class Box:
         self.position = position
         self.width = width
         self.height = height
+
         self.infection_chance = infection_chance
         self.infection_radius = infection_radius
+        self.death_chance = death_chance
+        self.recovery_chance = recovery_chance
 
         self.uninfected_particles = particles
         self.recovered_particles = []
@@ -68,6 +79,18 @@ class Box:
             State.DEAD: self.dead_particles,
         }
 
+    def near_infected_particle(self, particle):
+        """
+        Check if a particle is near any infected ones.
+
+        """
+        for infected_particle in self.infected_particles:
+            if (infected_particle.x - particle.x) ** 2 + (
+                infected_particle.y - particle.y
+            ) ** 2 < self.infection_radius ** 2:
+                return True
+        return False
+
     def step(self, dt):
         """
         Move all particles in the box and process collisions
@@ -77,8 +100,10 @@ class Box:
         for particle_list in self.particle_lists.items():
             # For each particle in this type...
             for particle in particle_list[1]:
+
                 # Record its initial state so we can track if it changes after a timestep
                 initial_state = particle.state
+
                 particle.move(
                     dt,
                     self.position[0],
@@ -89,15 +114,14 @@ class Box:
 
                 # If this particle is uninfected, it may get sick from a nerby infected particle.
                 if particle.state == State.UNINFECTED:
-                    for infected_particle in self.infected_particles:
-                        if (infected_particle.x - particle.x) ** 2 + (
-                            infected_particle.y - particle.y
-                        ) ** 2 > self.infection_radius ** 2:
-                            particle.infect(self.infection_chance)
+                    if self.near_infected_particle(particle):
+                        particle.infect(self.infection_chance)
 
                 # If it is already infected, it might die or recover
                 elif particle.state == State.SICK:
-                    particle.infection_progresses()
+                    particle.infection_progresses(
+                        self.death_chance, self.recovery_chance
+                    )
 
                 # If the state has changed, remove it from its original list and add it to the new one
                 if particle.state != initial_state:
@@ -130,15 +154,18 @@ class Particle:
         if random.random() < infection_chance:
             self.state = State.SICK
 
-    def infection_progresses(self):
+    def infection_progresses(self, death_chance, recovery_chance):
         """
         The infection progresses and we may either die or get better
 
         """
+        assert 0 < death_chance < 1
+        assert 0 < recovery_chance < 1
+
         rand_num = random.random()
-        if rand_num < 0.0001:
+        if rand_num < recovery_chance:
             self.state = State.RECOVERED
-        if rand_num > 0.995:
+        if rand_num > 1 - death_chance:
             self.state = State.DEAD
 
     def move(self, dt, left, right, bottom, top):

@@ -115,15 +115,27 @@ def cli():
     parser.add_argument("--speed", default=0.2, type=float, help="Max particle speed")
     parser.add_argument(
         "--radius",
-        default=0.0001,
+        default=0.05,
         type=float,
         help="Radius below which particles may catch the infection",
     )
     parser.add_argument(
-        "--chance",
-        default=0.0001,
+        "--infection_chance",
+        default=0.5,
         type=float,
         help="Chance to catch the infection per timestep",
+    )
+    parser.add_argument(
+        "--death_chance",
+        default=0.0001,
+        type=float,
+        help="Chance to die of the infection per timestep",
+    )
+    parser.add_argument(
+        "--recovery_chance",
+        default=0.0001,
+        type=float,
+        help="Chance to recover from the infection per timestep",
     )
     parser.add_argument(
         "--num", default=100, type=int, help="Number of particles to simulate"
@@ -142,7 +154,7 @@ def main(args):
     particle_speed = (  # Not actually the speed of the particles; max vx, vy of the particles
         args.speed / sqrt(2)
     )
-    infection_chance = args.chance
+    infection_chance = args.infection_chance
     infection_radius = args.radius
 
     my_particles = []
@@ -163,6 +175,8 @@ def main(args):
         box_height,
         infection_chance,
         infection_radius,
+        args.death_chance,
+        args.recovery_chance,
     )
 
     run_animation(particle_box, 0.1, 2)

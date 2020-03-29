@@ -2,7 +2,7 @@ rona.py - a simple disease simulator
 ======
 
 usage: rona.py [-h] [--width WIDTH] [--height HEIGHT] [--speed SPEED]
-               [--radius RADIUS] [--chance CHANCE]
+               [--radius RADIUS] [--chance CHANCE] [--num NUM]
 
 Run particle infection simulator
 
@@ -13,6 +13,7 @@ optional arguments:
   * --speed SPEED    Max particle speed
   * --radius RADIUS  Radius below which particles may catch the infection
   * --chance CHANCE  Chance to catch the infection per timestep
+  * --num NUM        Number of particles to simulate
 
 
 I think this might need python 3.8 but idk
