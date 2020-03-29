@@ -95,8 +95,8 @@ def random_state(x_range, y_range, v):
     """
     x = random.uniform(*x_range)
     y = random.uniform(*y_range)
-    vx = v * (2*random.random() - 1)
-    vy = v * (2*random.random() - 1)
+    vx = v * (2 * random.random() - 1)
+    vy = v * (2 * random.random() - 1)
 
     return x, y, vx, vy
 
@@ -108,18 +108,27 @@ def main():
     """
     box_width = 4
     box_height = 4
-    particle_speed = 0.1 # Not actually the speed of the particles; max vx, vy of the particles
+    particle_speed = (
+        0.1
+    )  # Not actually the speed of the particles; max vx, vy of the particles
     my_particles = []
     for i in range(500):
         my_particle_state = Particle.particle_state(
             *random_state(
-                (-box_width / 2, box_width / 2), (-box_height / 2, box_height / 2), particle_speed
+                (-box_width / 2, box_width / 2),
+                (-box_height / 2, box_height / 2),
+                particle_speed,
             )
         )
         my_particles.append(Particle.Particle(my_particle_state))
 
     particle_box = Particle.Box(
-        my_particles, (-box_width/2, -box_height/2), box_width, box_height, 0.0001, 0.0001
+        my_particles,
+        (-box_width / 2, -box_height / 2),
+        box_width,
+        box_height,
+        0.0001,
+        0.0001,
     )
 
     run_animation(particle_box, 0.1, 2)
