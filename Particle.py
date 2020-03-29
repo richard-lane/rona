@@ -128,9 +128,9 @@ class Particle:
 
         """
         rand_num = random.random()
-        if rand_num < 0.001:
+        if rand_num < 0.0:
             self.state = State.RECOVERED
-        if rand_num > 0.99:
+        if rand_num > 0.995:
             self.state = State.DEAD
 
     def step(

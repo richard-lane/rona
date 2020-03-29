@@ -26,7 +26,7 @@ def run_animation(particle_box, dt, markersize):
     # particles holds the locations of the particles
     uninfected_particles, = ax.plot([], [], "bo", ms=6)
     infected_particles, = ax.plot([], [], "rx", ms=6)
-    recovered_particles, = ax.plot([], [], "mo", ms=6)
+    recovered_particles, = ax.plot([], [], "go", ms=6)
 
     # rect is the box edge
     rect = plt.Rectangle(
