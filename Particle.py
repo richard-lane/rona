@@ -71,9 +71,6 @@ class Box:
         """
         Move all particles in the box and process collisions
 
-        There is a bug here as we're iterating over some lists and modifiying them at the same time
-        Fix it
-
         """
         # Iterate over all of our particle types
         for particle_list in self.particle_lists.items():
@@ -128,7 +125,7 @@ class Particle:
 
         """
         rand_num = random.random()
-        if rand_num < 0.0:
+        if rand_num < 0.0001:
             self.state = State.RECOVERED
         if rand_num > 0.995:
             self.state = State.DEAD
