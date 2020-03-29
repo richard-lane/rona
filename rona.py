@@ -4,7 +4,7 @@ Main file for virus simulation thing
 """
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import numpy as np
+import random
 
 import Particle
 
@@ -84,18 +84,21 @@ def run_animation(particle_box, dt, markersize):
     )
 
 
-def random_state():
+def random_state(x_range, y_range, v):
     """
+    Takes in (xmin, xmax), (ymin, ymax), v
+    v is the maximum speed along either coord axis
     return a list of (x, y, vx, vy)
+
     positions are between 0 and 1; velocities are between 0 and 0.2
-
+    Not guaranteed to be a uniform distribution or anything
     """
-    state = 2 * np.random.rand(4) - 1
-    # Make velocities smaller so its easier to see the animation
-    state[2] *= 0.2
-    state[3] *= 0.2
+    x = random.uniform(*x_range)
+    y = random.uniform(*y_range)
+    vx = v * (2*random.random() - 1)
+    vy = v * (2*random.random() - 1)
 
-    return state
+    return x, y, vx, vy
 
 
 def main():
@@ -103,12 +106,21 @@ def main():
     Animate a few particles moving
 
     """
+    box_width = 4
+    box_height = 4
+    particle_speed = 0.1 # Not actually the speed of the particles; max vx, vy of the particles
     my_particles = []
-    for i in range(100):
-        my_particle_state = Particle.particle_state(*random_state())
+    for i in range(500):
+        my_particle_state = Particle.particle_state(
+            *random_state(
+                (-box_width / 2, box_width / 2), (-box_height / 2, box_height / 2), particle_speed
+            )
+        )
         my_particles.append(Particle.Particle(my_particle_state))
 
-    particle_box = Particle.Box(my_particles, (-2, -2), 4, 4, 0.0001, 0.0001)
+    particle_box = Particle.Box(
+        my_particles, (-box_width/2, -box_height/2), box_width, box_height, 0.0001, 0.0001
+    )
 
     run_animation(particle_box, 0.1, 2)
     plt.show()
